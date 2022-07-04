@@ -21,6 +21,7 @@ builder.Services.AddHealthChecksUI().AddInMemoryStorage();
 
 //    opt.AddHealthCheckEndpoint("default api", "/healthz"); //map health check api
 //}).AddInMemoryStorage();
+
 builder.Services.AddHealthChecks()
     .AddSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"), tags: new[] { "database" })
     .AddCheck<CustomHealthCheck>("MyHealthCheck", tags: new[] { "custom" });
@@ -66,7 +67,8 @@ app.MapHealthChecks("/health/cors", new HealthCheckOptions
     ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
 }).RequireCors("MyCorsPolicy");
 
-app.MapHealthChecksUI();
+// Endpoint: /healthchecks-ui
+app.MapHealthChecksUI(setup => setup.AddCustomStylesheet("dotnet.css"));
 
 app.UseHttpsRedirection();
 
